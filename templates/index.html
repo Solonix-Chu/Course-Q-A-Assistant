@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人工智能原理 - 智能问答系统</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- 引入Markdown渲染库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- 确保highlight.js加载完成 -->
+    <script>
+        if (typeof hljs === 'undefined') {
+            console.error('highlight.js 未能正确加载，尝试使用备用方案');
+            // 创建一个空的hljs对象，避免代码中的错误
+            window.hljs = {
+                highlightElement: function() {},
+                highlight: function() { return { value: '' }; },
+                highlightAuto: function() { return { value: '' }; },
+                getLanguage: function() { return null; }
+            };
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>人工智能原理 - 课程智能助教</h1>
+            <p>基于DeepSeek AI的《人工智能原理》研究生课程问答系统</p>
+        </header>
+        
+        <main>
+            <div class="chat-container">
+                <div class="chat-box" id="chatBox">
+                    <div class="message system-message">
+                        <div class="message-content">
+                            <p>👋 你好！我是《人工智能原理》课程的智能助教。我可以：</p>
+                            <ul>
+                                <li>回答课程知识点问题</li>
+                                <li>提供作业相关的指导和答疑</li>
+                                <li>给出个性化的学习建议</li>
+                                <li>推荐相关学习资源</li>
+                            </ul>
+                            <p>请输入你的问题，我将尽力帮助你！</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-area">
+                    <textarea id="userInput" placeholder="输入你的问题..." rows="3"></textarea>
+                    <button id="sendBtn" type="button">发送</button>
+                </div>
+            </div>
+            
+            <div class="suggestions">
+                <h3>示例问题：</h3>
+                <div class="suggestion-chips">
+                    <button class="chip" onclick="askQuestion('什么是A*算法？它与其他搜索算法相比有什么优势？')">A*算法的原理与优势</button>
+                    <button class="chip" onclick="askQuestion('神经网络中的BP算法是如何工作的？')">BP算法原理</button>
+                    <button class="chip" onclick="askQuestion('如何设计一个基于深度学习的图像分类系统？')">深度学习图像分类系统设计</button>
+                    <button class="chip" onclick="askQuestion('强化学习中的探索与利用平衡问题如何解决？')">强化学习探索与利用</button>
+                    <button class="chip" onclick="askQuestion('如何开始准备《人工智能原理》的期末考试？')">期末复习建议</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2023 人工智能原理课程 | Powered by DeepSeek AI</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 
