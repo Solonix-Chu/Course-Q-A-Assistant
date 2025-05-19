@@ -1,0 +1,270 @@
+\documentclass{beamer}
+\usepackage[UTF8]{ctex}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Beamer 主题
+\usetheme{Madrid} % 你可以选择其他主题，例如: Warsaw, Berlin, Singapore, AnnArbor, Boadilla, CambridgeUS, Copenhagen, Darmstadt, Dresden, Frankfurt, Goettingen, Hannover, Ilmenau, JuanLesPins, Luebeck, Malmoe, Marburg, Montpellier, PaloAlto, Pittsburgh, Rochester, Szeged, Bergen
+
+% 颜色定义
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% listings 代码样式
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% 标题信息
+\title{《人工智能原理》课程智能问答系统}
+\subtitle{课程设计报告 -- 融合大模型技术}
+\author{CSC}
+\institute{计算机学院}
+\date{\today}
+
+
+\begin{document}
+
+% 标题页
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% 目录 (可选)
+\begin{frame}{目录}
+  \tableofcontents
+\end{frame}
+
+% --- 项目简介 ---
+\section{项目简介}
+\begin{frame}{项目简介}
+  \begin{block}{项目目标}
+    开发一个针对研究生课程《人工智能原理》的智能问答系统，旨在为学生提供便捷的、基于大模型技术的课程学习辅助工具。
+  \end{block}
+  \begin{block}{项目意义}
+    \begin{itemize}
+        \item 提高学生学习效率，及时解答与《人工智能原理》相关的疑问。
+        \item 整合课程核心知识点，方便学生系统性查阅和理解。
+        \item \textbf{桥接理论与实践：} 将《人工智能原理》的抽象概念与前沿的大语言模型 (LLM) 应用相结合。
+        \item \textbf{探索AI赋能教育：} 利用大模型技术提供个性化、智能化的学习支持。
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% --- 系统功能 ---
+\section{系统功能}
+\begin{frame}{系统功能}
+  系统主要提供以下功能，深度融合《人工智能原理》知识与大模型能力：
+  \begin{itemize}
+    \item \textbf{知识点查询：} 学生可针对课程中的概念（如搜索算法、知识表示、机器学习范式、神经网络结构等）进行提问，系统利用DeepSeek大模型进行深度解答。
+    \item \textbf{作业答疑：} 对课程作业中涉及的AI原理应用问题（如算法设计、模型分析），提供基于大模型理解能力的思路启发和解题建议。
+    \item \textbf{学习建议：} 结合《人工智能原理》的课程体系，通过大模型生成个性化的复习方法、重点提示。
+    \item \textbf{网页交互：} 提供用户友好的Web界面，方便学生随时随地访问和使用。
+  \end{itemize}
+\end{frame}
+
+% --- 技术架构 ---
+\section{技术架构}
+\begin{frame}{技术架构 - 概述}
+  系统采用了前后端分离的B/S架构，以DeepSeek大语言模型为核心AI引擎：
+  \begin{columns}[T] % T选项使列顶部对齐
+    \begin{column}{0.5\textwidth}
+      \textbf{后端技术栈：}
+      \begin{itemize}
+        \item Python: 主要编程语言
+        \item Flask: Web框架
+        \item python-dotenv: 管理环境变量
+        \item requests: 调用DeepSeek API
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \textbf{前端技术栈：}
+      \begin{itemize}
+        \item HTML5, CSS3, JavaScript (ES6+)
+        \item Marked.js: Markdown渲染
+        \item Highlight.js: 代码高亮
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{1em}
+  \begin{block}{\textbf{AI核心：DeepSeek 大语言模型 (LLM)}}
+    \begin{itemize}
+        \item \textbf{模型能力：} DeepSeek API提供了一个强大的预训练语言模型，具备自然语言理解、文本生成、知识问答、上下文学习等能力。
+        \item \textbf{作用：} 作为系统的"大脑"，负责解析用户用自然语言提出的《人工智能原理》相关问题，并生成符合逻辑、信息准确的回答。
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% --- 核心实现 ---
+\section{核心实现}
+\begin{frame}{核心实现 - 后端与API调用}
+  \textbf{Flask应用 (`app.py`):}
+  \begin{itemize}
+    \item 初始化Flask应用，配置CORS，加载API密钥。
+    \item 定义核心课程上下文 `AI_COURSE_CONTEXT`。
+    \item 主要路由 `/api/chat` (POST):
+      \begin{itemize}
+        \item 接收用户消息。
+        \item 构建发送给DeepSeek API的请求体，包含精心设计的系统提示 (System Prompt) 和用户问题。
+        \item 调用DeepSeek API，处理响应，返回AI生成的回答。
+      \end{itemize}
+  \end{itemize}
+  \textbf{与DeepSeek API交互逻辑：}
+  \begin{itemize}
+    \item 系统提示词 (`system_prompt`) 指导LLM扮演《人工智能原理》课程助教角色，强调基于提供的 `AI_COURSE_CONTEXT` 进行回答，并遵循特定输出格式和风格。
+    \item 这种交互方式体现了"上下文学习 (In-Context Learning)"的大模型特性。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{核心实现 - AI原理与大模型的融合}
+  \begin{block}{大语言模型 (LLM) 简介与应用}
+    \begin{itemize}
+        \item \textbf{技术基础：} 当前主流LLM（如DeepSeek采用的模型）多基于Transformer架构，通过在海量文本数据上进行自监督学习预训练获得强大的语言能力。
+        \item \textbf{本系统应用：} 利用DeepSeek API，将LLM作为核心引擎，实现智能问答功能，无需从零训练特定模型。
+    \end{itemize}
+  \end{block}
+  \begin{block}{《人工智能原理》在系统中的体现}
+    \begin{itemize}
+        \item \textbf{知识表示：} `AI_COURSE_CONTEXT` 连同系统提示词，为LLM构建了一个特定于《人工智能原理》课程的临时"知识图谱"或上下文环境。LLM在此基础上进行推理。
+        \item \textbf{自然语言处理 (NLP)：} LLM自动完成了用户查询的语义理解、意图识别，并生成了自然、连贯的中文回答，这些是NLP的核心任务。
+        \item \textbf{问题求解与搜索：} 用户的提问可以看作是对知识库的查询。LLM利用其内部参数化的知识和提供的上下文进行高效"搜索"和信息整合。
+    \end{itemize}
+  \end{block}
+  \begin{block}{提示工程 (Prompt Engineering)}
+    \begin{itemize}
+        \item 通过精心设计的系统提示词 (`system_prompt`) 来精确引导和约束LLM的行为，是发挥LLM能力的关键。
+        \item \textit{示例作用：} 确保AI专注于《人工智能原理》内容、扮演"课程助教"角色、使用中文回答、必要时提供代码示例等。
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{核心实现 - 前端 (`script.js`, `index.html`, `style.css`)}
+  \textbf{`script.js` (交互逻辑)：}
+  \begin{itemize}
+    \item 处理用户输入、异步调用后端API、展示用户与AI消息。
+    \item 使用Marked.js和Highlight.js美化AI回复中的Markdown和代码。
+    \item 实现加载指示器、错误处理、自动滚动等用户体验优化。
+  \end{itemize}
+  \textbf{`index.html` (页面结构) 和 `style.css` (样式)：}
+  \begin{itemize}
+    \item 构建了包含聊天框、输入区、示例问题建议的现代化Web界面。
+    \item 采用响应式设计，适应不同设备屏幕。
+  \end{itemize}
+\end{frame}
+
+% --- 系统演示 ---
+\section{系统演示}
+\begin{frame}{系统演示 - 界面截图}
+  为了更直观地展示系统，此处应放置系统运行时的截图。
+  \begin{figure}
+    % \includegraphics[width=0.8\textwidth]{screenshot.png} % 假设你有一张截图 screenshot.png
+    \centering
+    \fbox{\parbox[c][10cm][c]{0.8\textwidth}{\centering 系统主要界面截图}}
+    \caption{智能问答系统主界面 (基于DeepSeek LLM)}
+  \end{figure}
+  \textit{（请替换为实际的系统截图）}
+\end{frame}
+
+\begin{frame}{系统演示 - 功能流程}
+  \begin{enumerate}
+    \item 用户访问 Web 应用 (例如 `http://localhost:5001`)。
+    \item 界面加载，显示欢迎信息及《人工智能原理》相关示例问题。
+    \item 用户输入关于AI原理的问题（如"解释A*算法与启发式函数的关系"）。
+    \item 前端将问题发送至后端 Flask API。
+    \item 后端API构建请求，调用 DeepSeek LLM。
+    \item LLM 处理请求，基于其知识和提供的课程上下文生成回答。
+    \item 回答返回前端，经 Markdown 渲染后展示给用户。
+  \end{enumerate}
+\end{frame}
+
+% --- 遇到的问题与解决方案 ---
+\section{遇到的问题与解决方案}
+\begin{frame}{遇到的问题与解决方案}
+  在开发过程中，主要遇到了以下技术问题：
+  \begin{itemize}
+    \item \textbf{端口占用 (OSError: [Errno 48] Address already in use)：}
+      \begin{itemize}
+        \item \textbf{解决方案：} 修改 `app.py` 中 Flask 应用的运行端口。
+          \begin{lstlisting}[language=Python, caption=修改端口示例, basicstyle=\ttfamily\tiny]
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5001) # 使用新端口
+          \end{lstlisting}
+      \end{itemize}
+    \item \textbf{前端JS错误 (Can't find variable: hljs)：}
+      \begin{itemize}
+        \item \textbf{原因与方案：} `highlight.js` 库加载问题。通过更换CDN源、增加加载检查和容错处理解决。
+      \end{itemize}
+    \item \textbf{大模型输出控制：}
+      \begin{itemize}
+        \item \textbf{挑战：} 如何确保LLM的回答既准确又符合课程助教的定位。
+        \item \textbf{解决方案：} 关键在于 Prompt Engineering。通过在系统提示中明确角色、知识范围 (`AI_COURSE_CONTEXT`)、回答风格和禁止项，有效引导模型输出。
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+% --- 总结与展望 ---
+\section{总结与展望}
+\begin{frame}{总结}
+  \begin{itemize}
+    \item 成功构建了一个融合DeepSeek大语言模型的《人工智能原理》课程智能问答系统。
+    \item 系统有效结合了AI原理知识与LLM的自然语言处理能力，实现了知识点查询、作业答疑等功能。
+    \item 提供了用户友好的Web交互界面，并通过Prompt Engineering初步解决了LLM输出控制问题。
+    \item 项目实践了如何利用现有大模型API快速搭建领域特定智能应用。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{展望与未来工作}
+  未来的改进方向可以包括：
+  \begin{itemize}
+    \item \textbf{知识库增强与RAG：}
+        \begin{itemize}
+            \item 引入更全面的《人工智能原理》教材、课件、前沿论文等作为外部知识源。
+            \item 应用检索增强生成 (Retrieval Augmented Generation, RAG) 技术，使LLM能查询这些最新、更专业的知识，减少幻觉，提高回答准确度。
+        \end{itemize}
+    \item \textbf{用户个性化与多轮对话：}
+        \begin{itemize}
+            \item 记录用户交互历史，分析学习薄弱点，提供更具针对性的学习建议。
+            \item 优化对多轮对话上下文的理解，支持更流畅、深入的连续探讨。
+        \end{itemize}
+    \item \textbf{模型微调 (Fine-tuning)：}
+        \begin{itemize}
+            \item 若有充足的《人工智能原理》相关高质量问答数据，可考虑对基础大模型进行微调，进一步提升其在该特定领域的专业性和表现。
+        \end{itemize}
+    \item \textbf{交互式学习模块：} 探索集成如在线编程练习、概念可视化等互动模块。
+    \item \textbf{评估与反馈机制：} 引入用户对回答质量的评价机制，用于持续改进系统和提示。
+  \end{itemize}
+\end{frame}
+
+% --- 致谢 (可选) ---
+% \begin{frame}{致谢}
+%   感谢 DeepSeek 提供的API支持...
+% \end{frame}
+
+% 结束页
+\begin{frame}
+  \centering
+  {\Huge \bfseries 谢谢观看！}
+  \vfill
+  \Large 提问与交流
+\end{frame}
+
+\end{document} 
